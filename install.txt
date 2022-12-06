@@ -1,0 +1,8 @@
+pip install paddlepaddle -i https://mirror.baidu.com/pypi/simple
+pip install "paddleocr>=2.0.1"
+pip install paddleclas
+
+https://github.com/UB-Mannheim/tesseract/wiki
+Добавить в виартуальные переменные в Path расположение tesseract.exe
+
+pip install pytesseract
