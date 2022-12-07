@@ -1,0 +1,33 @@
+DATE: 2019 год
+   YEAR: 2019
+DATE: апрель 2019 года
+   MONTH: 4
+   HIGHER: 2019 год
+DATE: 21 апреля 2019 года
+   DAY: 21
+   HIGHER: апрель 2019 года
+DATE: 15 апреля 2019 года
+   HIGHER: апрель 2019 года
+   DAY: 15
+DATE: февраль 2019 года
+   MONTH: 2
+   HIGHER: 2019 год
+DATE: 15 февраля 2019 года
+   DAY: 15
+   HIGHER: февраль 2019 года
+DATERANGE: по 21 апреля 2019 года
+   TO: 21 апреля 2019 года
+   @EXCLUDE: true
+PERSON: Александра Александровна Александрова
+   SEX: FEMALE
+   LASTNAME: АЛЕКСАНДРОВА
+   FIRSTNAME: АЛЕКСАНДРА
+   MIDDLENAME: АЛЕКСАНДРОВНА
+DATE: 2019 год
+   YEAR: 2019
+DATE: февраль 2019 года
+   MONTH: 2
+   HIGHER: 2019 год
+DATE: 14 февраля 2019 года
+   DAY: 14
+   HIGHER: февраль 2019 года
