@@ -1,10 +1,12 @@
+import flask
 from flask import Flask, render_template, send_from_directory, url_for, request
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import SubmitField
-from segmentation import startSegmentation, getSegmentation
-from ner import NerInstall, GetNer
+from segmentation import getSegmentation
+from ner import GetNer
+import html
 
 
 app = Flask(__name__)
@@ -44,15 +46,20 @@ def upload_file():
             file_url = url_for('get_file', filename=filename)
 
             # Doc recognition
-            res_img, detect_str = getSegmentation(filename)
+            res_img, detect_str, detect_table = getSegmentation(filename)
             ner_entities = GetNer(detect_str)
+
+            html_tables = []
+            for table in detect_table:
+                html_tables.append(flask.Markup(table))
+
 
         else:
             filename = None
             file_url = None
 
         return render_template('result.html', form=form, filename=filename, file_url=file_url, res_img=res_img,
-                               det_str=detect_str, ner_ent=ner_entities)
+                               det_str=detect_str, ner_ent=ner_entities, det_table=html_tables)
 
 
 if __name__ == '__main__':
