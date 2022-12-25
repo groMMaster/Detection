@@ -11,16 +11,16 @@ def NerInstall():
     sw.stop()
 
 
-def GetNer(file):
+def GetNer(text):
+    NerInstall()
+    entities = []
     with ProcessorService.create_processor() as proc:
-        with open("res/ner.txt", "w") as ner:
-            with open(file, "r") as segmentation:
-                for txt in segmentation:
-                    ar = proc.process(SourceOfAnalysis(txt), None, None)
-                    for e0_ in ar.entities:
-                        ner.write("{0}: {1}".format(e0_.type_name, str(e0_)) + '\n')
-                        for s in e0_.slots:
-                            ner.write("   {0}: {1}".format(s.type_name, s.value) + '\n')
+        for txt in text:
+            ar = proc.process(SourceOfAnalysis(txt), None, None)
+            for i, e0_ in enumerate(ar.entities):
+                entities.append({})
+                entities[i][e0_.type_name] = str(e0_)
+                for s in e0_.slots:
+                    entities[i][s.type_name] = str(s.value)
 
-NerInstall()
-GetNer("res/segmentation.txt")
+    return entities
