@@ -19,6 +19,8 @@ def getSegmentation(filename):
     startSegmentation()
     table_engine = PPStructure(table=True, layout=True, show_log=True, ocr=False)
     img = cv2.imread(f'docs/{filename}')
+    img_post = img.copy()
+
     result = table_engine(img)
     txt_array = []
     table_array = []
@@ -27,11 +29,16 @@ def getSegmentation(filename):
         cv2.rectangle(img, (x1, y1), (x2, y2), (255, 0, 0), 2)
         cv2.putText(img, res['type'], (x1, y1-2), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
 
+        cv2.rectangle(img_post, (x1, y1), (x2, y2), (255, 255, 255), -1)
+
         if res["type"] == "text" or res["type"] == "title":
             txt_array.append(
                 pytesseract.image_to_string(res["img"], config='--psm 6 -c tessedit_char_blacklist= ‘][|\/`', lang='rus'))
         if res["type"] == "table":
             table_array.append(GetHtmlTable(res))
+
+    txt_array.append(
+        pytesseract.image_to_string(img_post, config='--psm 6 -c tessedit_char_blacklist= ‘][|\/`', lang='rus'))
 
     img_data = cv2.imencode('.png', img)[1].tostring()
     img_data = base64.b64encode(img_data)
