@@ -20,7 +20,5 @@ def GetNer(text):
             for i, e0_ in enumerate(ar.entities):
                 entities.append({})
                 entities[i][e0_.type_name] = str(e0_)
-                for s in e0_.slots:
-                    entities[i][s.type_name] = str(s.value)
 
     return entities
