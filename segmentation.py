@@ -1,8 +1,6 @@
 # coding=utf8
-import os
 import base64
 import cv2
-from paddleocr import PPStructure
 import matplotlib.pyplot as plt
 import pytesseract
 import numpy as np
@@ -15,9 +13,7 @@ def startSegmentation():
     plt.rcParams['figure.figsize'] = (15, 20)
 
 
-def getSegmentation(filename):
-    startSegmentation()
-    table_engine = PPStructure(table=True, layout=True, show_log=True, ocr=False)
+def getSegmentation(filename, table_engine):
     img = cv2.imread(f'docs/{filename}')
     img_post = img.copy()
 
@@ -31,7 +27,7 @@ def getSegmentation(filename):
 
         cv2.rectangle(img_post, (x1, y1), (x2, y2), (255, 255, 255), -1)
 
-        if res["type"] == "text" or res["type"] == "title":
+        if res["type"] == "text" or res["type"] == "title" or res["type"] == "figure" or res["type"] == "table_caption":
             txt_array.append(
                 pytesseract.image_to_string(res["img"], config='--psm 6 -c tessedit_char_blacklist= ‘][|\/`', lang='rus'))
         if res["type"] == "table":
@@ -55,7 +51,7 @@ def GetHtmlTable(table):
         rect = cv2.boundingRect(contour)
         x, y, w, h = rect
         cell_img = table["img"][y: y + h, x: x + w]
-        cell_txt = pytesseract.image_to_string(table["img"][y: y + h, x: x + w],
+        cell_txt = pytesseract.image_to_string(cell_img,
                                                config='--psm 6 -c tessedit_char_blacklist= ‘][|\/`', lang='rus')
         cell_txt = cell_txt.strip()
         cells_txt.append(cell_txt)

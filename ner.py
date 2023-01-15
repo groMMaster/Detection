@@ -12,7 +12,6 @@ def NerInstall():
 
 
 def GetNer(text):
-    NerInstall()
     entities = []
     with ProcessorService.create_processor() as proc:
         for txt in text:
