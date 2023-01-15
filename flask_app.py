@@ -4,15 +4,16 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed, FileRequired
 from wtforms import SubmitField
-from segmentation import getSegmentation
-from ner import GetNer
-import html
+from segmentation import getSegmentation, startSegmentation
+from ner import GetNer, NerInstall
+from paddleocr import PPStructure
 
+PP_TABLE_ENGINE = {}
+ENGINE_INSTALLED = False
 
 app = Flask(__name__)
 app.config['UPLOADED_DOCUMENTS_DEST'] = 'docs'
 app.config['SECRET_KEY'] = 'ac90825480812ea4e02bc39aceaa80e1'
-
 
 documents = UploadSet('documents', IMAGES)
 configure_uploads(app, documents)
@@ -46,13 +47,12 @@ def upload_file():
             file_url = url_for('get_file', filename=filename)
 
             # Doc recognition
-            res_img, detect_str, detect_table = getSegmentation(filename)
+            res_img, detect_str, detect_table = getSegmentation(filename, PP_TABLE_ENGINE)
             ner_entities = GetNer(detect_str)
 
             html_tables = []
             for table in detect_table:
                 html_tables.append(flask.Markup(table))
-
 
         else:
             filename = None
@@ -63,5 +63,11 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if not ENGINE_INSTALLED:
+        startSegmentation()
+        NerInstall()
+        PP_TABLE_ENGINE = PPStructure(table=True, layout=True, show_log=True, ocr=False)
+        ENGINE_INSTALLED = True
+
+    app.run(debug=False)
 
